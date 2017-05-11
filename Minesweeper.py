@@ -1,6 +1,7 @@
 import ZedLib
 import PlayingState
 
+
 class Minesweeper(ZedLib.Game):
     def __init__(self):
         super().__init__(8*32, 8*32)
@@ -8,5 +9,4 @@ class Minesweeper(ZedLib.Game):
 
     def Start(self):
         self.ChangeState(self.playing_state)
-        self.playing_state.CreateBoard()
         self.Loop()
