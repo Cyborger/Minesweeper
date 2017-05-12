@@ -4,13 +4,13 @@ import pygame
 
 
 class PlayingState(ZedLib.GameState):
-    def __init__(self, game):
+    def __init__(self, game, cells_wide, cells_high):
         super().__init__(game)
-        self.board = Board.Board(9, 9, 10)  # 8 by 8 board with 10 mines
+        self.board = Board.Board(cells_wide, cells_high, 10)  # 10 mines
         self.board.CreateBoard()
 
     def DrawScreen(self):
-        for cell in self.board.GetCellList():
+        for cell in self.board.cells:
             self.game.screen.blit(cell.image, cell.rect)
 
     def HandleEvents(self):

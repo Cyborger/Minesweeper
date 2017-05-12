@@ -3,15 +3,19 @@ import pygame
 
 
 class Cell(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, grid_x, grid_y):
         self.covered_image = ZedLib.LoadImage("Resources/Cell.png")
         self.uncovered_image = ZedLib.LoadImage("Resources/EmptyCell.png")
         self.image = self.covered_image.copy()
         self.rect = self.image.get_rect()
-        self.rect.x = x * self.rect.width
-        self.rect.y = y * self.rect.height
+        self.grid_x = grid_x
+        self.grid_y = grid_y
         self.uncovered = False
         self.flagged = False
+
+    def SetPosition(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
 
     def CheckClick(self, mouse_pos):
         if self.rect.collidepoint(mouse_pos):
@@ -23,7 +27,6 @@ class Cell(pygame.sprite.Sprite):
     def Reveal(self):
         self.image = self.uncovered_image.copy()
         self.uncovered = True
-        print("cell revealed")
 
     def CheckFlag(self, mouse_pos):
         if self.rect.collidepoint(mouse_pos):
@@ -37,32 +40,6 @@ class Cell(pygame.sprite.Sprite):
 
     def UnFlag(self):
         pass
-
-    def GetCellIndex(self, grid):
-        for row in grid:
-            for cell in row:
-                if cell == self:
-                    return row.index(cell)
-
-    def GetCellRowNumber(self, grid):
-        for row in grid:
-            for cell in row:
-                if cell == self:
-                    return grid.index(row)
-
-    def UncoverNearby(self, grid):
-        current_row = self.GetCellRowNumber(grid)
-        current_index = self.GetCellIndex(grid)
-        right = grid[current_row][min(current_index+1, len(grid[current_row]) - 1)]
-        left = grid[current_row][max(current_index-1, 0)]
-        above = grid[min(current_row+1, len(grid) - 1)][current_index]
-        below = grid[max(current_row-1, 0)][current_index]
-        nearby = [right, left, above, below]
-        for cell in nearby:
-            if (not cell.uncovered and not isinstance(cell, MineCell)
-                    and not isinstance(cell, NumberCell)):
-                cell.Reveal()
-                cell.UncoverNearby(grid)
 
 
 class MineCell(Cell):
