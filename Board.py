@@ -29,7 +29,17 @@ class Board:
             self.grid.append(row_of_cells)
 
     def CreateMines(self):
-        pass
+        mine = Cell.MineCell(1, 1)
+        self.grid[1][1] = mine
 
     def CreateNumberCells(self):
         pass
+
+    def CheckMineClick(self, mouse_pos):
+        for cell in self.GetCellList():
+            if cell.CheckClick(mouse_pos):
+                cell.UncoverNearby(self.grid)
+
+    def CheckFlagClick(self, mouse_pos):
+        for cell in self.board.GetCellList():
+            cell.CheckFlag(mouse_pos)
