@@ -8,6 +8,15 @@ class PlayingState(ZedLib.GameState):
         super().__init__(game)
         self.board = Board.Board(cells_wide, cells_high, 10)  # 10 mines
         self.board.CreateBoard()
+        self.gameover_delay = ZedLib.Timer(2000)
+
+    def Update(self):
+        delta = self.game.clock.get_time()
+        if self.board.lost:
+            self.gameover_delay.Update(delta)
+            if self.gameover_delay.complete:
+                self.board.Reset()
+                self.gameover_delay.Reset()
 
     def DrawScreen(self):
         for cell in self.board.cells:
