@@ -74,7 +74,7 @@ class MineCell(Cell):
 class NumberCell(Cell):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.number_font = pygame.font.SysFont("monospace", 15)
+        self.number_font = pygame.font.SysFont("Arial", 500)
         self.number_of_nearby_mines = 1
         self.original_uncovered = self.uncovered_image.copy()
         self.uncovered_image = self.GetNumberImage()
@@ -85,7 +85,7 @@ class NumberCell(Cell):
 
     def GetNumberImage(self):
         number_image = self.number_font.render(str(self.number_of_nearby_mines),
-                                               5, (0, 0, 255))
+                                               200, (0, 0, 255))
         number_image = pygame.transform.scale(number_image, (self.rect.width, self.rect.height))
         base_image = self.original_uncovered.copy()
         base_image.blit(number_image, (0, 0))
