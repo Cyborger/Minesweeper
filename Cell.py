@@ -76,7 +76,7 @@ class MineCell(Cell):
 class NumberCell(Cell):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.number_font = pygame.font.SysFont("monospace", 15)
+        self.number_font = pygame.font.SysFont("Arial", 500)
         self.number_of_nearby_mines = 1
         self.original_uncovered = self.uncovered_image.copy()
         self.uncovered_image = self.GetNumberImage()
