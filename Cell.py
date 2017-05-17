@@ -61,9 +61,11 @@ class Cell(pygame.sprite.Sprite):
         self.image = self.covered_image.copy()
         self.flagged = False
 
+
 class EmptyCell(Cell):
     def __init__(self, x, y):
         super().__init__(x, y)
+
 
 class MineCell(Cell):
     def __init__(self, x, y):
@@ -84,9 +86,10 @@ class NumberCell(Cell):
         self.uncovered_image = self.GetNumberImage()
 
     def GetNumberImage(self):
-        number_image = self.number_font.render(str(self.number_of_nearby_mines),
-                                               5, (0, 0, 255))
-        number_image = pygame.transform.scale(number_image, (self.rect.width, self.rect.height))
+        number_image = self.number_font.\
+            render(str(self.number_of_nearby_mines), 5, (0, 0, 255))
+        number_image = pygame.transform.scale(number_image, (self.rect.width,
+                                                             self.rect.height))
         base_image = self.original_uncovered.copy()
         base_image.blit(number_image, (0, 0))
         return base_image
