@@ -10,6 +10,7 @@ class Board:
         self.cells_high = width
         self.cells_wide = height
         self.lost = False
+        self.won = False
         random.seed()
 
     def CreateBoard(self):
@@ -92,13 +93,24 @@ class Board:
                     cell.UncoverNearby(self.cells)
                 elif isinstance(cell, Cell.MineCell):
                     self.lost = True
+        self.CheckWin()
 
     def CheckFlagClick(self, mouse_pos):
         for cell in self.cells:
             cell.CheckFlag(mouse_pos)
+
+    def CheckWin(self):
+        number_of_sells_uncovered = 0
+        for cell in self.cells:
+            if cell.uncovered:
+                number_of_sells_uncovered += 1
+        if number_of_sells_uncovered == len(self.cells) - len(self.mines):
+            if not self.lost:
+                self.won = True
 
     def Reset(self):
         self.cells = []
         self.mines = []
         self.CreateBoard()
         self.lost = False
+        self.won = False

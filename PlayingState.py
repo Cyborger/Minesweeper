@@ -9,6 +9,7 @@ class PlayingState(ZedLib.GameState):
         self.board = Board.Board(cells_wide, cells_high, 10)  # 10 mines
         self.board.CreateBoard()
         self.gameover_delay = ZedLib.Timer(2000)
+        self.win_delay = ZedLib.Timer(500)
 
     def Update(self):
         delta = self.game.clock.get_time()
@@ -17,6 +18,11 @@ class PlayingState(ZedLib.GameState):
             if self.gameover_delay.complete:
                 self.board.Reset()
                 self.gameover_delay.Reset()
+        if self.board.won:
+            self.win_delay.Update(delta)
+            if self.win_delay.complete:
+                self.board.Reset()
+                self.win_delay.Reset()
 
     def DrawScreen(self):
         for cell in self.board.cells:
