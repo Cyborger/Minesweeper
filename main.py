@@ -5,10 +5,13 @@ import random
 class Cell:
     SIZE = 32
 
-    def __init__(self, x, y, uncovered_image):
-        self.image = uncovered_image
+    def __init__(self, x, y):
+        self.covered_image = pygame.image.load("res/covered.png").convert_alpha()
+        self.flagged_image = pygame.image.load("res/flagged.png").convert_alpha()
+        self.image = self.covered_image.copy()
         self.rect = self.image.get_rect(x=x, y=y)
         self.covered = True
+        self.flagged = False
 
     def uncover(self):
         raise NotImplementedError
@@ -16,13 +19,17 @@ class Cell:
     def mouse_is_hovering(self):
         return self.rect.collidepoint(pygame.mouse.get_pos())
 
-    def flag(self):
-        self.image = pygame.image.load("res/flagged.png")
+    def invert_flag(self):
+        self.flagged = not self.flagged
+        if self.flagged:
+            self.image = self.flagged_image.copy()
+        else:
+            self.image = self.covered_image.copy()
 
 
 class NormalCell(Cell):
     def __init__(self, x, y):
-        super().__init__(x, y, pygame.image.load("res/covered.png").convert_alpha())
+        super().__init__(x, y)
         self.mine_neighbors = 0
 
     def increment_mine_neighbors(self):
@@ -41,7 +48,7 @@ class NormalCell(Cell):
 
 class MineCell(Cell):
     def __init__(self, x, y):
-        super().__init__(x, y, pygame.image.load("res/covered.png").convert_alpha())
+        super().__init__(x, y)
 
     def uncover(self):
         self.image = pygame.image.load("res/mine.png").convert_alpha()
@@ -88,14 +95,15 @@ class Board:
     def left_clicked(self):
         for y in range(len(self.cells)):
             for x in range(len(self.cells[y])):
-                if self.cells[y][x].mouse_is_hovering() and self.cells[y][x].covered:
+                if (self.cells[y][x].mouse_is_hovering() and self.cells[y][x].covered and
+                    not self.cells[y][x].flagged):
                     self.uncover_cell(x, y)
 
     def right_clicked(self):
         for row in self.cells:
             for cell in row:
                 if cell.mouse_is_hovering() and cell.covered:
-                    cell.flag()
+                    cell.invert_flag()
 
     def uncover_cell(self, x, y):
         if x < 0 or x >= self.CELLS_WIDE or y < 0 or y >= self.CELLS_HIGH or not self.cells[y][x].covered:
@@ -137,6 +145,7 @@ class Game:
         self.screen = pygame.display.set_mode((Board.CELLS_WIDE * Cell.SIZE,
                                                Board.CELLS_HIGH * Cell.SIZE))
         pygame.display.set_caption("Minesweeper")
+        pygame.display.set_icon(pygame.image.load("res/mine.png").convert_alpha())
         self.board = Board()
         self.game_over = False
 
