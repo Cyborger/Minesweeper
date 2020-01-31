@@ -56,9 +56,9 @@ class MineCell(Cell):
 
 
 class Board:
-    CELLS_WIDE = 10
-    CELLS_HIGH = 10
-    NUMBER_OF_MINES = 10
+    CELLS_WIDE = 20
+    CELLS_HIGH = 20
+    NUMBER_OF_MINES = 40
     MINE_EXPLODED = pygame.USEREVENT + 1
     GAME_WON = pygame.USEREVENT + 2
 
